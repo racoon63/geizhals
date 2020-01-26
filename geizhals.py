@@ -40,7 +40,7 @@ if __name__ == "__main__":
         smtp_server    = "smtp.gmail.com"
         smtp_port      = 465
         email_sender   = os.environ["SENDER"]
-        email_password = os.environ["PWD"]
+        email_password = os.environ["PASS"]
         email_receiver = os.environ["RECEIVER"]
         
         response = requests.get(baseUrl)

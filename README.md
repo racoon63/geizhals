@@ -25,7 +25,7 @@ docker run  --rm \
             -e URL="https://geizhals.de/gigabyte-geforce-rtx-2070-super-windforce-oc-3x-8g-gv-n207swf3oc-8gd-a2122943.html" \
             -e PRICE=520 \
             -e SENDER="foo@bar.com" \
-            -e PWD="123456" \
+            -e PASS="123456" \
             -e RECEIVER="bar@foo.com" \
             racoon/geizhals
 ```
