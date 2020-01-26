@@ -4,23 +4,57 @@
 # 
 # python3 geizhals.py
 
+from email.mime.text import MIMEText
+import os
 import requests
+import smtplib
+import ssl
+import sys
+
 from bs4 import BeautifulSoup
 
-target_price = 510.00
-baseUrl = "https://geizhals.de/gigabyte-geforce-rtx-2070-super-windforce-oc-3x-8g-gv-n207swf3oc-8gd-a2122943.html?hloc=at&hloc=de"
+
+def send_mail(message):
+
+    context = ssl.create_default_context()
+
+    try:
+        with smtplib.SMTP_SSL(smtp_server, smtp_port, context=context) as server:
+            server.ehlo()
+            server.login(email_sender, email_password)
+            server.sendmail(email_sender, email_receiver, message)
+    
+    except Exception as err:
+        print(err)
+    
+    else:
+        print("Sent email notification successfully!")
+        return
+
 
 if __name__ == "__main__":
     
-    response = requests.get(baseUrl)
-    html = BeautifulSoup(response.text, "html.parser")
-    
-    enclose = html.find_all("dd", {"itemprop": "offers", "itemtype": "http://schema.org/AggregateOffer"})
+    try:
+        baseUrl        = os.environ["URL"]
+        target_price   = os.environ["PRICE"]
+        smtp_server    = "smtp.gmail.com"
+        smtp_port      = 465
+        email_sender   = os.environ["SENDER"]
+        email_password = os.environ["PWD"]
+        email_receiver = os.environ["RECEIVER"]
+        
+        response = requests.get(baseUrl)
+        html = BeautifulSoup(response.text, "html.parser")
 
-    price = enclose[0].meta.get("content")
+        enclose = html.find_all("dd", {"itemprop": "offers", "itemtype": "http://schema.org/AggregateOffer"})
 
-    if float(price) <= target_price:
-        print("Price reached your target price of: {}".format(target_price))
-        print("Price of your requested item is: {}".format(price))
-    else:
-        print("Price is still too high. Current lowest price is: {}".format(price))
+        price = enclose[0].meta.get("content")
+
+        if float(price) <= float(target_price):
+            msg = MIMEText("Price reached your target price or is below: {}. The price is now: {}".format(target_price, price))
+
+            msg['Subject'] = "Your item reached your desired price"
+
+            send_mail(msg.as_string())
+    except Exception as err:
+        print(err)
