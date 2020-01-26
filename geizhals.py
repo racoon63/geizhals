@@ -1,4 +1,4 @@
-#!/usr/bin/env pyhton3
+#!/usr/bin/env python3
 
 # Run this script with:
 # 
@@ -56,5 +56,6 @@ if __name__ == "__main__":
             msg['Subject'] = "Your item reached your desired price"
 
             send_mail(msg.as_string())
+    
     except Exception as err:
         print(err)
