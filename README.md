@@ -1,6 +1,6 @@
 # Geizhals
 
-Simple script to get notified when desired price is reached. This idea comes from the situation that <geizhals.de> did not send me notificagtions even if the target price was reached. I was too lazy to find out why so I wrote this simple script.
+Simple script to get notified when desired price is reached. This idea comes from the situation that geizhals.de did not send me notifications even if the target price was reached. I was too lazy to find out why so I wrote this simple script.
 
 ## Usage
 
@@ -28,4 +28,10 @@ docker run  --rm \
             -e PASS="123456" \
             -e RECEIVER="bar@foo.com" \
             racoon/geizhals
+```
+
+To run this periodically, you can use crontab. Below you'll find an example crontab entry which runs the script every 30 minutes:
+
+```bash
+30 * * * * docker run --rm -e URL="https://geizhals.de/gigabyte-geforce-rtx-2070-super-windforce-oc-3x-8g-gv-n207swf3oc-8gd-a2122943.html" -e PRICE="520" -e SENDER="foo@bar.com" -e PASS="123456" -e RECEIVER="bar@foo.com" racoon/geizhals >> /home/USERNAME/geizhals/gh.log
 ```
